@@ -3,129 +3,150 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Two People Dancing</title>
+<title>Catch the Ball Game</title>
 <style>
   body {
     margin: 0;
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: linear-gradient(to bottom, #87ceeb 0%, #f0f8ff 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    gap: 80px;
     font-family: Arial, sans-serif;
+    overflow: hidden;
   }
-
-  .person {
-    position: relative;
-    width: 80px;
-    height: 180px;
-  }
-
-  /* Head */
-  .head {
-    width: 50px;
-    height: 50px;
-    background: #f9c74f;
-    border-radius: 50%;
+  #gameCanvas {
+    background: #222;
+    border: 3px solid #fff;
+    display: block;
     margin: 0 auto;
-    position: relative;
-    z-index: 10;
   }
-
-  /* Body */
-  .body {
-    width: 15px;
-    height: 90px;
-    background: #90be6d;
-    margin: 0 auto;
-    position: relative;
-    top: -10px;
-    border-radius: 8px;
-    transform-origin: top center;
-    animation: bodyMove 2s ease-in-out infinite;
-  }
-
-  /* Arms */
-  .arm-left, .arm-right {
-    width: 15px;
-    height: 70px;
-    background: #f9844a;
-    position: absolute;
-    top: 30px;
-    border-radius: 8px;
-    transform-origin: top center;
-    animation: armsMove 2s ease-in-out infinite;
-  }
-
-  .arm-left {
-    left: -20px;
-    animation-delay: 0s;
-  }
-
-  .arm-right {
-    right: -20px;
-    animation-delay: 1s;
-  }
-
-  /* Legs */
-  .leg-left, .leg-right {
-    width: 15px;
-    height: 70px;
-    background: #577590;
-    position: absolute;
-    top: 120px;
-    border-radius: 8px;
-    transform-origin: top center;
-    animation: legsMove 2s ease-in-out infinite;
-  }
-
-  .leg-left {
-    left: 0;
-    animation-delay: 1s;
-  }
-
-  .leg-right {
-    right: 0;
-    animation-delay: 0s;
-  }
-
-  /* Animations */
-  @keyframes bodyMove {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(10deg); }
-  }
-
-  @keyframes armsMove {
-    0%, 100% { transform: rotate(15deg); }
-    50% { transform: rotate(-15deg); }
-  }
-
-  @keyframes legsMove {
-    0%, 100% { transform: rotate(-15deg); }
-    50% { transform: rotate(15deg); }
+  #score {
+    color: white;
+    font-size: 24px;
+    margin-top: 10px;
+    text-align: center;
   }
 </style>
 </head>
 <body>
 
-  <div class="person">
-    <div class="head"></div>
-    <div class="body"></div>
-    <div class="arm-left"></div>
-    <div class="arm-right"></div>
-    <div class="leg-left"></div>
-    <div class="leg-right"></div>
-  </div>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<div id="score">Score: 0</div>
 
-  <div class="person" style="--delay: 1s;">
-    <div class="head"></div>
-    <div class="body" style="animation-delay: 1s;"></div>
-    <div class="arm-left" style="animation-delay: 1s;"></div>
-    <div class="arm-right" style="animation-delay: 2s;"></div>
-    <div class="leg-left" style="animation-delay: 2s;"></div>
-    <div class="leg-right" style="animation-delay: 1s;"></div>
-  </div>
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const paddleWidth = 100;
+  const paddleHeight = 15;
+  const paddleY = canvas.height - paddleHeight - 10;
+
+  let paddleX = (canvas.width - paddleWidth) / 2;
+  let rightPressed = false;
+  let leftPressed = false;
+
+  const ballRadius = 15;
+  let ballX = Math.random() * (canvas.width - ballRadius * 2) + ballRadius;
+  let ballY = ballRadius + 10;
+  let ballSpeedY = 4;
+
+  let score = 0;
+  let gameOver = false;
+
+  document.addEventListener('keydown', keyDownHandler);
+  document.addEventListener('keyup', keyUpHandler);
+
+  function keyDownHandler(e) {
+    if(e.key === 'Right' || e.key === 'ArrowRight') {
+      rightPressed = true;
+    }
+    else if(e.key === 'Left' || e.key === 'ArrowLeft') {
+      leftPressed = true;
+    }
+  }
+
+  function keyUpHandler(e) {
+    if(e.key === 'Right' || e.key === 'ArrowRight') {
+      rightPressed = false;
+    }
+    else if(e.key === 'Left' || e.key === 'ArrowLeft') {
+      leftPressed = false;
+    }
+  }
+
+  function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
+    ctx.fillStyle = '#00ff99';
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  function drawBall() {
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2);
+    ctx.fillStyle = '#ff4d4d';
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  function drawScore() {
+    document.getElementById('score').innerText = `Score: ${score}`;
+  }
+
+  function resetBall() {
+    ballX = Math.random() * (canvas.width - ballRadius * 2) + ballRadius;
+    ballY = ballRadius + 10;
+    ballSpeedY = 4 + score * 0.5; // speed up as score increases
+  }
+
+  function gameLoop() {
+    if (gameOver) {
+      ctx.font = '48px Arial';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over!', canvas.width/2, canvas.height/2 - 20);
+      ctx.font = '28px Arial';
+      ctx.fillText(`Final Score: ${score}`, canvas.width/2, canvas.height/2 + 20);
+      ctx.fillText('Refresh to Play Again', canvas.width/2, canvas.height/2 + 60);
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawPaddle();
+    drawBall();
+    drawScore();
+
+    // Move paddle
+    if(rightPressed && paddleX < canvas.width - paddleWidth) {
+      paddleX += 7;
+    }
+    else if(leftPressed && paddleX > 0) {
+      paddleX -= 7;
+    }
+
+    // Move ball
+    ballY += ballSpeedY;
+
+    // Check if ball hits paddle
+    if(ballY + ballRadius >= paddleY &&
+       ballX >= paddleX &&
+       ballX <= paddleX + paddleWidth) {
+      score++;
+      resetBall();
+    }
+    // Missed ball
+    else if(ballY - ballRadius > canvas.height) {
+      gameOver = true;
+    }
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  gameLoop();
+</script>
 
 </body>
 </html>
