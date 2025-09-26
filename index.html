@@ -3,91 +3,129 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Animated Dragon with Fire Breath</title>
+<title>Two People Dancing</title>
 <style>
   body {
-    height: 100vh;
     margin: 0;
-    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
-    overflow: hidden;
-    cursor: none; /* Hide default cursor */
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 80px;
+    font-family: Arial, sans-serif;
   }
 
-  #dragon {
-    position: absolute;
+  .person {
+    position: relative;
     width: 80px;
-    height: 80px;
-    pointer-events: auto; /* So we can click */
-    user-select: none;
-    transition: transform 0.1s ease-out;
+    height: 180px;
+  }
+
+  /* Head */
+  .head {
+    width: 50px;
+    height: 50px;
+    background: #f9c74f;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
     z-index: 10;
   }
 
-  /* Fire element */
-  #fire {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    pointer-events: none;
-    opacity: 0;
-    transform-origin: left center;
-    background: radial-gradient(circle at 20% 50%, #ff4500 40%, transparent 80%);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    filter: drop-shadow(0 0 6px #ff4500);
-    animation: fireBurst 0.6s ease-out forwards;
-    z-index: 9;
+  /* Body */
+  .body {
+    width: 15px;
+    height: 90px;
+    background: #90be6d;
+    margin: 0 auto;
+    position: relative;
+    top: -10px;
+    border-radius: 8px;
+    transform-origin: top center;
+    animation: bodyMove 2s ease-in-out infinite;
   }
 
-  @keyframes fireBurst {
-    0% {
-      opacity: 1;
-      transform: scale(0.5) translateX(0);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(2) translateX(60px);
-    }
+  /* Arms */
+  .arm-left, .arm-right {
+    width: 15px;
+    height: 70px;
+    background: #f9844a;
+    position: absolute;
+    top: 30px;
+    border-radius: 8px;
+    transform-origin: top center;
+    animation: armsMove 2s ease-in-out infinite;
+  }
+
+  .arm-left {
+    left: -20px;
+    animation-delay: 0s;
+  }
+
+  .arm-right {
+    right: -20px;
+    animation-delay: 1s;
+  }
+
+  /* Legs */
+  .leg-left, .leg-right {
+    width: 15px;
+    height: 70px;
+    background: #577590;
+    position: absolute;
+    top: 120px;
+    border-radius: 8px;
+    transform-origin: top center;
+    animation: legsMove 2s ease-in-out infinite;
+  }
+
+  .leg-left {
+    left: 0;
+    animation-delay: 1s;
+  }
+
+  .leg-right {
+    right: 0;
+    animation-delay: 0s;
+  }
+
+  /* Animations */
+  @keyframes bodyMove {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(10deg); }
+  }
+
+  @keyframes armsMove {
+    0%, 100% { transform: rotate(15deg); }
+    50% { transform: rotate(-15deg); }
+  }
+
+  @keyframes legsMove {
+    0%, 100% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
   }
 </style>
 </head>
 <body>
 
-<!-- Dragon SVG -->
-<svg id="dragon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" title="Dragon">
-  <path fill="#d32f2f" stroke="#7b0000" stroke-width="2" d="M32 2c-6 0-12 5-12 11 0 6 3 10 6 12 0 0-5 1-5 8s7 13 7 13 3-5 4-7c1 1 5 5 5 5s1-11 4-14-3-16-11-18z"/>
-  <circle cx="29" cy="15" r="2" fill="#000" />
-</svg>
+  <div class="person">
+    <div class="head"></div>
+    <div class="body"></div>
+    <div class="arm-left"></div>
+    <div class="arm-right"></div>
+    <div class="leg-left"></div>
+    <div class="leg-right"></div>
+  </div>
 
-<!-- Fire element, initially hidden -->
-<div id="fire"></div>
-
-<script>
-  const dragon = document.getElementById('dragon');
-  const fire = document.getElementById('fire');
-
-  window.addEventListener('mousemove', (e) => {
-    const offsetX = 40;
-    const offsetY = 40;
-    dragon.style.left = `${e.clientX - offsetX}px`;
-    dragon.style.top = `${e.clientY - offsetY}px`;
-
-    // Position fire near dragon's mouth (approximate)
-    fire.style.top = `${e.clientY - offsetY + 20}px`;
-    fire.style.left = `${e.clientX + 10}px`;
-  });
-
-  dragon.addEventListener('click', () => {
-    // Reset animation
-    fire.style.animation = 'none';
-    fire.style.opacity = 1;
-    // Trigger reflow to restart animation
-    void fire.offsetWidth;
-    fire.style.animation = 'fireBurst 0.6s ease-out forwards';
-  });
-</script>
+  <div class="person" style="--delay: 1s;">
+    <div class="head"></div>
+    <div class="body" style="animation-delay: 1s;"></div>
+    <div class="arm-left" style="animation-delay: 1s;"></div>
+    <div class="arm-right" style="animation-delay: 2s;"></div>
+    <div class="leg-left" style="animation-delay: 2s;"></div>
+    <div class="leg-right" style="animation-delay: 1s;"></div>
+  </div>
 
 </body>
 </html>
-
-
-    
