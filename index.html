@@ -3,45 +3,86 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dragon Following Cursor</title>
+<title>Animated Dragon with Fire Breath</title>
 <style>
   body {
     height: 100vh;
     margin: 0;
     background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
     overflow: hidden;
-    cursor: none; /* Hide default cursor for fun */
+    cursor: none; /* Hide default cursor */
   }
 
   #dragon {
     position: absolute;
     width: 80px;
     height: 80px;
-    pointer-events: none; /* So it doesn't block mouse events */
+    pointer-events: auto; /* So we can click */
+    user-select: none;
     transition: transform 0.1s ease-out;
+    z-index: 10;
+  }
+
+  /* Fire element */
+  #fire {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    opacity: 0;
+    transform-origin: left center;
+    background: radial-gradient(circle at 20% 50%, #ff4500 40%, transparent 80%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    filter: drop-shadow(0 0 6px #ff4500);
+    animation: fireBurst 0.6s ease-out forwards;
+    z-index: 9;
+  }
+
+  @keyframes fireBurst {
+    0% {
+      opacity: 1;
+      transform: scale(0.5) translateX(0);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2) translateX(60px);
+    }
   }
 </style>
 </head>
 <body>
 
-<!-- Using an SVG Dragon Icon -->
-<!-- You can replace this SVG with any dragon icon you like -->
-<svg id="dragon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Dragon SVG -->
+<svg id="dragon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" title="Dragon">
   <path fill="#d32f2f" stroke="#7b0000" stroke-width="2" d="M32 2c-6 0-12 5-12 11 0 6 3 10 6 12 0 0-5 1-5 8s7 13 7 13 3-5 4-7c1 1 5 5 5 5s1-11 4-14-3-16-11-18z"/>
   <circle cx="29" cy="15" r="2" fill="#000" />
 </svg>
 
+<!-- Fire element, initially hidden -->
+<div id="fire"></div>
+
 <script>
   const dragon = document.getElementById('dragon');
+  const fire = document.getElementById('fire');
 
   window.addEventListener('mousemove', (e) => {
-    // Position the dragon centered on cursor with slight offset so it doesn't hide the cursor
-    const offsetX = 40; 
+    const offsetX = 40;
     const offsetY = 40;
     dragon.style.left = `${e.clientX - offsetX}px`;
     dragon.style.top = `${e.clientY - offsetY}px`;
 
-    // Optional: rotate dragon to face cursor direction (if you add movement logic)
+    // Position fire near dragon's mouth (approximate)
+    fire.style.top = `${e.clientY - offsetY + 20}px`;
+    fire.style.left = `${e.clientX + 10}px`;
+  });
+
+  dragon.addEventListener('click', () => {
+    // Reset animation
+    fire.style.animation = 'none';
+    fire.style.opacity = 1;
+    // Trigger reflow to restart animation
+    void fire.offsetWidth;
+    fire.style.animation = 'fireBurst 0.6s ease-out forwards';
   });
 </script>
 
