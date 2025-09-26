@@ -1,152 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Catch the Ball Game</title>
-<style>
-  body {
-    margin: 0;
-    background: linear-gradient(to bottom, #87ceeb 0%, #f0f8ff 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-  }
-  #gameCanvas {
-    background: #222;
-    border: 3px solid #fff;
-    display: block;
-    margin: 0 auto;
-  }
-  #score {
-    color: white;
-    font-size: 24px;
-    margin-top: 10px;
-    text-align: center;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrant Gradient Welcome</title>
+    <style>
+        /* This is the CSS section */
+        body {
+            /* Creates a diagonal gradient background using four colors */
+            background: linear-gradient(
+                135deg, 
+                #ff9a8d 0%, /* Coral Pink */
+                #ffc3a0 50%, /* Peach */
+                #ff7f50 75%, /* Coral */
+                #ff6f61 100% /* Tomato Red */
+            );
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            /* Center content both horizontally and vertically */
+            justify-content: center;
+            align-items: center;
+            height: 100vh; 
+            margin: 0;
+        }
+
+        .welcome-box {
+            /* Styling for the box containing the welcome message */
+            background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            padding: 50px 70px;
+            border-radius: 20px;
+            /* Creates a shadow that matches the gradient a bit */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            /* Adds a slight animation effect for flair */
+            transform: scale(1.05); 
+            transition: all 0.3s ease-in-out;
+        }
+
+        h1 {
+            color: #e84118; /* A vibrant red/orange color */
+            font-size: 3em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #2f3640;
+            font-size: 1.5em;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="gameCanvas" width="400" height="600"></canvas>
-<div id="score">Score: 0</div>
-
-<script>
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-
-  const paddleWidth = 100;
-  const paddleHeight = 15;
-  const paddleY = canvas.height - paddleHeight - 10;
-
-  let paddleX = (canvas.width - paddleWidth) / 2;
-  let rightPressed = false;
-  let leftPressed = false;
-
-  const ballRadius = 15;
-  let ballX = Math.random() * (canvas.width - ballRadius * 2) + ballRadius;
-  let ballY = ballRadius + 10;
-  let ballSpeedY = 4;
-
-  let score = 0;
-  let gameOver = false;
-
-  document.addEventListener('keydown', keyDownHandler);
-  document.addEventListener('keyup', keyUpHandler);
-
-  function keyDownHandler(e) {
-    if(e.key === 'Right' || e.key === 'ArrowRight') {
-      rightPressed = true;
-    }
-    else if(e.key === 'Left' || e.key === 'ArrowLeft') {
-      leftPressed = true;
-    }
-  }
-
-  function keyUpHandler(e) {
-    if(e.key === 'Right' || e.key === 'ArrowRight') {
-      rightPressed = false;
-    }
-    else if(e.key === 'Left' || e.key === 'ArrowLeft') {
-      leftPressed = false;
-    }
-  }
-
-  function drawPaddle() {
-    ctx.beginPath();
-    ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
-    ctx.fillStyle = '#00ff99';
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  function drawBall() {
-    ctx.beginPath();
-    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = '#ff4d4d';
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  function drawScore() {
-    document.getElementById('score').innerText = `Score: ${score}`;
-  }
-
-  function resetBall() {
-    ballX = Math.random() * (canvas.width - ballRadius * 2) + ballRadius;
-    ballY = ballRadius + 10;
-    ballSpeedY = 4 + score * 0.5; // speed up as score increases
-  }
-
-  function gameLoop() {
-    if (gameOver) {
-      ctx.font = '48px Arial';
-      ctx.fillStyle = '#fff';
-      ctx.textAlign = 'center';
-      ctx.fillText('Game Over!', canvas.width/2, canvas.height/2 - 20);
-      ctx.font = '28px Arial';
-      ctx.fillText(`Final Score: ${score}`, canvas.width/2, canvas.height/2 + 20);
-      ctx.fillText('Refresh to Play Again', canvas.width/2, canvas.height/2 + 60);
-      return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    drawPaddle();
-    drawBall();
-    drawScore();
-
-    // Move paddle
-    if(rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += 7;
-    }
-    else if(leftPressed && paddleX > 0) {
-      paddleX -= 7;
-    }
-
-    // Move ball
-    ballY += ballSpeedY;
-
-    // Check if ball hits paddle
-    if(ballY + ballRadius >= paddleY &&
-       ballX >= paddleX &&
-       ballX <= paddleX + paddleWidth) {
-      score++;
-      resetBall();
-    }
-    // Missed ball
-    else if(ballY - ballRadius > canvas.height) {
-      gameOver = true;
-    }
-
-    requestAnimationFrame(gameLoop);
-  }
-
-  gameLoop();
-</script>
+    <div class="welcome-box">
+        <h1>Hello World!</h1>
+        <p>Welcome to this vibrant space.</p>
+    </div>
 
 </body>
 </html>
